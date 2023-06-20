@@ -15,7 +15,7 @@ The program [`matmul1.c`](matmul1.c) computes the product for two square matrice
 ```
   for (i=0; i < n; i++)
     for (j=0; j < n; j++)
-      for (k=0; k < n; j++)
+      for (k=0; k < n; k++)
         c[i][j] = c[i][j] + a[i][k]*b[j][k];
 ```
 
@@ -23,7 +23,7 @@ The program [`matmul1.c`](matmul1.c) computes the product for two square matrice
 
 ```
   for (i=0; i < n; i++)
-    for (k=0; k < n; j++)
+    for (k=0; k < n; k++)
       for (j=0; j < n; j++)
         c[i][j] = c[i][j] + a[i][k]*b[k][j];
 ```
@@ -31,7 +31,7 @@ The program [`matmul1.c`](matmul1.c) computes the product for two square matrice
 ### Outer Product Formulation
 
 ```
-  for (k=0; k < n; j++)
+  for (k=0; k < n; k++)
     for (i=0; i < n; i++)
       for (j=0; j < n; j++)
         c[i][j] = c[i][j] + a[i][k]*b[j][k];
