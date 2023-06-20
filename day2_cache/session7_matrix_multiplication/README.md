@@ -8,7 +8,7 @@ _Objective: Explore different formulations of matrix multiplication and compare 
 
 ## Matrix Multiplication
 
-The program [`matmul1.c`](matmul1.c) computes the product for two square matrices, i.e. $AB = C$, where matrices $A$, $B$ and $C$ all have dimension $n$. The program considers three alternative formulations:
+The program [`matmul1.c`](matmul1.c) computes the product for two square matrices, i.e. $AB = C$, where matrices $A$, $B$ and $C$ all have dimension $n$ and $B$ is symmetric. The program considers three alternative formulations:
 
 ### Dot Product Formulation
 
