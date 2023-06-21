@@ -8,7 +8,7 @@ _Objective: To gain familiarity using the perf & VTune profiling tools._
 
 ## _perf : A Linux System-wide Profiling Tool_
 
-_Credits: The perf lab is derived from various sources [Perf Wiki](https://perf.wiki.kernel.org/index.php/Tutorial); [Brenden Greg's Perf page](http://www.brendangregg.com/perf.html); [Paul Drongowski's Perf tutorial](http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/) and [Perf for user-space program analysis](https://events.static.linuxfound.org/sites/events/files/lcjp13_takata.pdf)._
+_Credits: The perf lab is derived from various sources [Perf Wiki](https://perf.wiki.kernel.org/index.php/Tutorial); [Brendan Gregg's Perf page](http://www.brendangregg.com/perf.html); [Paul Drongowski's Perf tutorial](http://sandsoftwaresound.net/perf/perf-tutorial-hot-spots/) and [Tetsuo Takata's Perf for user-space program analysis tutorial](https://events.static.linuxfound.org/sites/events/files/lcjp13_takata.pdf)._
 
 ### Introduction to `perf`
 
