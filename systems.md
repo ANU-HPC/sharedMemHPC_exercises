@@ -25,9 +25,9 @@ For the exercises, you may wish to open two sessions on remote system at once, o
 
 For exercises which require timing measurements, you should run them interactively on a single compute node of Gadi. To start an interactive job in your current working directory, enter the following command:
 
-    qsub -l wd -l ncpus=48 -l mem=192GB -l walltime=30:00 -I
+    qsub -l wd -l ncpus=48 -l mem=192GB -l walltime=30:00 -I -X
 
-This will allocate an entire node of Gadi (48 cores, 192GB of memory) for your exclusive interactive use for a period of 30 minutes. _As soon as you've finished using the node, remember to `exit` to free up the resource for other people to use!_
+This will allocate an entire node of Gadi (48 cores, 192GB of memory) for your exclusive interactive use for a period of 30 minutes, forwarding X windows through your login session. _As soon as you've finished using the node, remember to `exit` to free up the resource for other people to use!_
 
 <!--
 *   Execute the command `echo $graviton`. You should see the DNS address of the AWS ARM server; it will look something like: `ec2-18-217-136-35.us-east-2.compute.amazonaws.com` (the exact address changes every time the server is brought up). From your Gadi account, you should be able to login to the AWS ARM server using the same ID using the set-up ssh key, i.e. `ssh $graviton`. The editors nano, vim and emacs are available there as well.
