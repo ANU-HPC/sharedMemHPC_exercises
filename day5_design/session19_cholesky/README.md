@@ -17,7 +17,7 @@ The program can be built using `make` and invoked using the following command:
 ./cholesky <matrix_dimension>
 ```
 
-The program generates a random $n \times n$ matrix $A$ and then performs a Cholesky factorization to determine $L$. Finally, it checks the resulting factorization by computing and printing the maximum error for any element of the reconstructed matrix; that is, given $\hat{A} = LL^T$, the error is $\mathrm{max}(\hat{A}_{ij} - A_{ij})$.
+The program generates a random $n \times n$ matrix $A$ and then performs a Cholesky factorization to determine $L$. Finally, it checks the resulting factorization by computing and printing the maximum error for any element of the reconstructed matrix; that is, given $A' = LL^T$, the error is $\max(A'\_{ij} - A\_{ij})$.
 
 After the matrix $A$ is initialized, it is copied to another matrix $L$, and the upper triangle of $L$ is set to zero. $L$ is then divided into square blocks of size `BLOCK_SIZE`, and the Cholesky factorization is performed using four basic block operations. Each of these operations corresponds to one of the [Basic Linear Algebra Subprograms](https://netlib.org/blas/), although each is specialized in some way (e.g. through hard-coded choices for certain parameters in the BLAS):
 
