@@ -69,6 +69,22 @@ Try increasing the _K_ parameter from 16 to something larger. How does the diffe
 
 Try switching from the optimized to the vanilla matrix multiply (`-v 1`). What do you observe now, and why?
 
+## lstopo
+
+To generate a diagram of the processing elements, cache, and memory modules in each NUMA package of the current node, run the following command:
+
+```
+lstopo --no-io -v --output-format png > topo.png
+```
+
+On a 'normal' Cascade Lake compute node of Gadi, this produces the following diagram:
+
+![Gadi Cascade Lake NUMA topology diagram](gadi_cl_topo.png)
+
+On a 'normalsr' Sapphire Rapids node, the diagram is more complex:
+
+![Gadi Sapphire Rapids NUMA topology diagram](gadi_sr_topo.png)
+
 ## libnuma
 
 View the manual page for libnuma by entering the command:
