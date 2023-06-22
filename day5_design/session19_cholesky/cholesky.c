@@ -64,8 +64,7 @@ int main(int argc, char *argv[]) {
   // initialize arrays - make symmetric
   for (size_t i = 0; i < nsize; i++) {
     for (size_t j = 0; j <= i; j++) {
-      a[i * nsize + j] =
-          1.0 - (double)rand()/RAND_MAX;
+      a[i * nsize + j] = 1.0 - (double)rand() / RAND_MAX;
       a[j * nsize + i] = a[i * nsize + j];
     }
     a[i * nsize + i] += nsize;
@@ -148,29 +147,33 @@ void cholesky(const size_t nsize, double *l) {
   int num_blocks = (nsize + BLOCK_SIZE - 1) / BLOCK_SIZE;
 
   for (int k = 0; k < num_blocks; k++) {
-    size_t k_height =
-        k < num_blocks - 1 ? BLOCK_SIZE : nsize - (BLOCK_SIZE * (num_blocks - 1));
+    size_t k_height = k < num_blocks - 1
+                          ? BLOCK_SIZE
+                          : nsize - (BLOCK_SIZE * (num_blocks - 1));
     block_cholesky(k_height, MATRIX_BLOCK(nsize, l, k, k),
                    nsize);  // A[k][k] = sqrt(A[k][k])
 
     for (int m = k + 1; m < num_blocks; m++) {
-      size_t m_width =
-          m < num_blocks - 1 ? BLOCK_SIZE : nsize - (BLOCK_SIZE * (num_blocks - 1));
+      size_t m_width = m < num_blocks - 1
+                           ? BLOCK_SIZE
+                           : nsize - (BLOCK_SIZE * (num_blocks - 1));
       block_triangular_solve(m_width, k_height, MATRIX_BLOCK(nsize, l, k, k),
                              nsize, MATRIX_BLOCK(nsize, l, m, k),
                              nsize);  // A[m][k] = A[m,k] A[k][k]^-1
     }
 
     for (int m = k + 1; m < num_blocks; m++) {
-      size_t m_width =
-          m < num_blocks - 1 ? BLOCK_SIZE : nsize - (BLOCK_SIZE * (num_blocks - 1));
+      size_t m_width = m < num_blocks - 1
+                           ? BLOCK_SIZE
+                           : nsize - (BLOCK_SIZE * (num_blocks - 1));
       block_symmetric_rank_k_update(
           m_width, k_height, MATRIX_BLOCK(nsize, l, m, k), nsize,
           MATRIX_BLOCK(nsize, l, m, m), nsize);  // A[m][m] -= A[m][k] A[m][k]^T
 
       for (int n = k + 1; n < m; n++) {
-        size_t n_width =
-            n < num_blocks - 1 ? BLOCK_SIZE : nsize - (BLOCK_SIZE * (num_blocks - 1));
+        size_t n_width = n < num_blocks - 1
+                             ? BLOCK_SIZE
+                             : nsize - (BLOCK_SIZE * (num_blocks - 1));
         block_sub_matrix_mul(
             m_width, n_width, k_height, MATRIX_BLOCK(nsize, l, m, k), nsize,
             MATRIX_BLOCK(nsize, l, n, k), nsize, MATRIX_BLOCK(nsize, l, m, n),
@@ -195,7 +198,7 @@ void block_cholesky(const size_t n, double *a, const size_t lda) {
     for (size_t j = i + 1; j < n; j++) {
       a[j * lda + i] = a[j * lda + i] * invd;
     }
-    for (size_t j = i + 1; j < n; j++) {  // TODO added
+    for (size_t j = i + 1; j < n; j++) {
       for (int k = i + 1; k <= j; k++) {
         a[j * lda + k] -= a[j * lda + i] * a[k * lda + i];
       }
@@ -274,27 +277,50 @@ void block_sub_matrix_mul(const size_t m, const size_t n, const size_t k,
   for (size_t i = 0; i < m; i++)
     for (size_t j = 0; j < n; j++)
       for (size_t l = 0; l < k; l++)
-        c[i * ldc + j] =
-            c[i * ldc + j] - a[i * lda + l] * b[j * ldb + l];  // TODO transB?
+        c[i * ldc + j] = c[i * ldc + j] - a[i * lda + l] * b[j * ldb + l];
 }
 
 /*
- * Compute the maximum error on any element of the Cholesky factorization L of
- * matrix A, that is, given M = L * L^T, return max(abs(M[i,j] - A[i,j]))
+ * Compute the error of the Cholesky factorization L of matrix A via
+ * matrix-vector multiplication. Generates a random vector v, returns
+ * max(abs(LL^Tv - Av)).
  */
 double check_factorization(size_t n, const double *a, const double *l) {
   double max_err = 0.0;
+  double *v = malloc(n * sizeof(double));
+  double *err = malloc(n * sizeof(double));
+  double *temp = malloc(n * sizeof(double));
+
+  for (int i = 0; i < n; i++) {
+    v[i] = (double)(rand()) / RAND_MAX * 2.0 - 1.0;
+  }
+
+  // temp = L^Tv
   for (size_t i = 0; i < n; i++) {
+    temp[i] = 0.0;
     for (size_t j = 0; j < n; j++) {
-      double l_times_lt = 0.0;
-      for (size_t k = 0; k < n; k++) {
-        l_times_lt +=
-            l[i * n + k] * l[j * n + k];  // A[i,j] = L[i,..] * L^t[..,j]
-      }
-      double error = fabs(l_times_lt - a[i * n + j]);
-      max_err = fmax(max_err, error);
+      temp[i] += l[j * n + i] * v[j];
     }
   }
+  // err = LL^Tv
+  for (size_t i = 0; i < n; i++) {
+    err[i] = 0.0;
+    for (size_t j = 0; j < n; j++) {
+      err[i] += l[i * n + j] * temp[j];
+    }
+  }
+
+  // err -= Av
+  for (size_t i = 0; i < n; i++) {
+    for (size_t j = 0; j < n; j++) {
+      err[i] -= a[i * n + j] * v[j];
+    }
+    max_err = fmax(max_err, fabs(err[i]));
+  }
+
+  free(v);
+  free(err);
+  free(temp);
   return max_err;
 }
 
