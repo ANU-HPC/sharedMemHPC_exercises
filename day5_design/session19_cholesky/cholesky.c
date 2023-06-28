@@ -301,6 +301,7 @@ double check_factorization(size_t n, const double *a, const double *l) {
     for (size_t j = 0; j < n; j++) {
       temp[i] += l[j * n + i] * v[j];
     }
+    if (isnan(temp[i])) return INFINITY;
   }
   // err = LL^Tv
   for (size_t i = 0; i < n; i++) {
