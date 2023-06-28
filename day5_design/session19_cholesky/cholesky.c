@@ -108,7 +108,7 @@ int main(int argc, char *argv[]) {
 
   delta = (isec1 - isec0) * 1000000 + iusec1 - iusec0;
   time = 1.0e-6 * (double)delta;
-  mflops = values[0] / delta;
+  mflops = 1.0 / 3.0 * nsize * nsize * nsize / delta;
   err = check_factorization(nsize, a, l);
 
   printf("\n\n");
